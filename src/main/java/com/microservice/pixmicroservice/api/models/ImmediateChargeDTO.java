@@ -16,4 +16,5 @@ public class ImmediateChargeDTO {
     private ValueDTO valor;
     private String chave;
     private String solicitacaoPagador;
+    private QrCodeDTO qrCode;
 }

@@ -2,6 +2,7 @@ package com.microservice.pixmicroservice.domain.services;
 
 import com.microservice.pixmicroservice.api.models.ImmediateChargeDTO;
 import com.microservice.pixmicroservice.api.models.Inputs.ImmediateChargeInputDTO;
+import com.microservice.pixmicroservice.api.models.QrCodeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +23,20 @@ public class PixService {
 
     public ImmediateChargeDTO createImmediateCharge(ImmediateChargeInputDTO immediateChargeInputDTO) throws Exception {
         try {
-            String json = gsonService.toJson(immediateChargeInputDTO);
-            HashMap<String, Object> jsonMap = gsonService.fromJsonToMap(json);
-            Map<String, Object> immediateCharge = gerenciaNetService.createImmediateCharge(jsonMap);
+            String inputDto = gsonService.toJson(immediateChargeInputDTO);
+            HashMap<String, Object> jsonMapInputDto = gsonService.fromJsonToMap(inputDto);
+
+            Map<String, Object> immediateCharge = gerenciaNetService.createImmediateCharge(jsonMapInputDto);
             String immediateChargeJson = gsonService.toJson(immediateCharge);
-            return gsonService.fromJson(immediateChargeJson, ImmediateChargeDTO.class);
+            ImmediateChargeDTO immediateChargeDTO = gsonService.fromJson(immediateChargeJson, ImmediateChargeDTO.class);
+
+            Map<String, Object> qrCode = gerenciaNetService.retrieveQrCode(immediateCharge);
+            String qrCodeJson = gsonService.toJson(qrCode);
+            QrCodeDTO qrCodeDTO = gsonService.fromJson(qrCodeJson, QrCodeDTO.class);
+
+            immediateChargeDTO.setQrCode(qrCodeDTO);
+
+            return immediateChargeDTO;
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
             throw new Exception(e.getMessage());

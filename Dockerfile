@@ -10,4 +10,6 @@ WORKDIR /home/src/app
 COPY --from=build /home/src/app/target/pix-microservice-0.0.1-SNAPSHOT.jar app.jar
 CMD ["java", "-jar", "app.jar"]
 
+COPY producao-503840-prod-cert.p12 .
+
 EXPOSE 8080
