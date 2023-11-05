@@ -1,10 +1,11 @@
 package com.microservice.pixmicroservice.api.configurations;
 
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 public class GerenciaNetConfig {

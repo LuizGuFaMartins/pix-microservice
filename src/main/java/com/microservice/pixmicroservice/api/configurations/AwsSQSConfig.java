@@ -14,9 +14,6 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class AwsSQSConfig {
 
-    @Value("${aws.region}")
-    private String awsRegion;
-
     @Value("${aws.sqs.accessKey}")
     private String awsAccessKey;
 
