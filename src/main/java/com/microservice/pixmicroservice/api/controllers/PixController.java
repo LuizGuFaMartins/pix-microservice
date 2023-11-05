@@ -2,7 +2,9 @@ package com.microservice.pixmicroservice.api.controllers;
 
 import com.microservice.pixmicroservice.api.models.ImmediateChargeDTO;
 import com.microservice.pixmicroservice.api.models.Inputs.ImmediateChargeInputDTO;
+import com.microservice.pixmicroservice.api.producers.PixProducer;
 import com.microservice.pixmicroservice.domain.services.GerenciaNetService;
+import com.microservice.pixmicroservice.domain.services.GsonService;
 import com.microservice.pixmicroservice.domain.services.PixService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,12 @@ public class PixController {
     @Autowired
     private PixService pixService;
 
+    @Autowired
+    private PixProducer pixProducer;
+
+    @Autowired
+    private GsonService gsonService;
+
     @PostMapping("/immediate-charge")
     public ResponseEntity<ImmediateChargeDTO> createImmediateChage(
             @RequestBody() ImmediateChargeInputDTO immediateChargeInputDTO
@@ -29,6 +37,19 @@ public class PixController {
         try {
             ImmediateChargeDTO immediateChargeDTO = pixService.createImmediateCharge(immediateChargeInputDTO);
             return ResponseEntity.ok(immediateChargeDTO);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @PostMapping("/queue")
+    public void sendToQueue(
+            @RequestBody() ImmediateChargeInputDTO immediateChargeInputDTO
+    ) {
+        try {
+            String message = gsonService.toJson(immediateChargeInputDTO);
+            pixProducer.send(message);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, e.getMessage());
             throw new RuntimeException(e);
