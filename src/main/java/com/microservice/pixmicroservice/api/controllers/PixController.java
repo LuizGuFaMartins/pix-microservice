@@ -43,7 +43,7 @@ public class PixController {
         }
     }
 
-    @PostMapping("/queue")
+    @PostMapping("/send-to-queue")
     public void sendToQueue(
             @RequestBody() ImmediateChargeInputDTO immediateChargeInputDTO
     ) {

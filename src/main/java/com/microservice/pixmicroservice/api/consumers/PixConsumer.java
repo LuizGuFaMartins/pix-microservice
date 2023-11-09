@@ -1,25 +1,27 @@
 package com.microservice.pixmicroservice.api.consumers;
 
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.microservice.pixmicroservice.api.models.ImmediateChargeDTO;
 import com.microservice.pixmicroservice.api.models.Inputs.ImmediateChargeInputDTO;
 import com.microservice.pixmicroservice.domain.services.GsonService;
 import com.microservice.pixmicroservice.domain.services.PixService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy;
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 @Slf4j
 @Service
 public class PixConsumer {
     public static final Logger LOGGER = Logger.getLogger(PixConsumer.class.getName());
+
+    @Value("${receiver.url}")
+    public String receiverUrl;
 
     @Autowired
     private PixService pixService;
@@ -35,6 +37,9 @@ public class PixConsumer {
             ImmediateChargeInputDTO immediateChargeInputDTO = gsonService.fromJson(message, ImmediateChargeInputDTO.class);
             try {
                 ImmediateChargeDTO immediateChargeDTO = pixService.createImmediateCharge(immediateChargeInputDTO);
+                if (Objects.nonNull(receiverUrl)) {
+                    pixService.sendImmediateChargeToReceiver(receiverUrl, immediateChargeDTO);
+                }
             } catch (Exception e) {
                 log.error(e.getMessage());
                 throw new RuntimeException(e);

@@ -4,6 +4,7 @@ import com.microservice.pixmicroservice.api.models.ImmediateChargeDTO;
 import com.microservice.pixmicroservice.api.models.Inputs.ImmediateChargeInputDTO;
 import com.microservice.pixmicroservice.api.models.QrCodeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,6 +21,9 @@ public class PixService {
 
     @Autowired
     private GerenciaNetService gerenciaNetService;
+
+    @Autowired
+    private HttpService httpService;
 
     public ImmediateChargeDTO createImmediateCharge(ImmediateChargeInputDTO immediateChargeInputDTO) throws Exception {
         try {
@@ -41,5 +45,9 @@ public class PixService {
             LOGGER.log(Level.SEVERE, e.getMessage());
             throw new Exception(e.getMessage());
         }
+    }
+
+    public void sendImmediateChargeToReceiver(String receiverUrl, ImmediateChargeDTO immediateChargeDTO){
+        httpService.post(receiverUrl, immediateChargeDTO);
     }
 }
