@@ -19,11 +19,10 @@ public class HttpService {
 
     public void post(String url, Object body) {
         try {
-
-
             HttpClient httpClient = HttpClient.newHttpClient();
             String requestBody = gsonService.toJson(body);
             HttpRequest request = HttpRequest.newBuilder()
+                    .version(HttpClient.Version.HTTP_1_1)
                     .uri(URI.create(url))
                     .header("Content-Type", "application/json; charset=UTF-8")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))

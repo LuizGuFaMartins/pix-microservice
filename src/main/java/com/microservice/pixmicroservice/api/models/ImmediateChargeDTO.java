@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ImmediateChargeDTO {
+    private Long clientId;
+    private Long orderId;
     private CalendarDTO calendario;
     private String txid;
     private int revisao;

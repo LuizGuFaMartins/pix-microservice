@@ -16,4 +16,6 @@ public class ImmediateChargeInputDTO {
     private String chave;
 
     private String solicitacaoPagador;
+    private Long clientId;
+    private Long orderId;
 }

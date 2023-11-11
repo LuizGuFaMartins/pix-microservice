@@ -35,16 +35,21 @@ public class PixConsumer {
         log.info("message received {} {}", senderId, message);
         if (Objects.nonNull(message)) {
             ImmediateChargeInputDTO immediateChargeInputDTO = gsonService.fromJson(message, ImmediateChargeInputDTO.class);
+            Long clientId = immediateChargeInputDTO.getClientId();
+            Long orderId = immediateChargeInputDTO.getOrderId();
+            immediateChargeInputDTO.setClientId(null);
+            immediateChargeInputDTO.setOrderId(null);
             try {
                 ImmediateChargeDTO immediateChargeDTO = pixService.createImmediateCharge(immediateChargeInputDTO);
                 if (Objects.nonNull(receiverUrl)) {
+                    immediateChargeDTO.setClientId(clientId);
+                    immediateChargeDTO.setOrderId(orderId);
                     pixService.sendImmediateChargeToReceiver(receiverUrl, immediateChargeDTO);
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
                 throw new RuntimeException(e);
             }
-
         }
     }
 }
