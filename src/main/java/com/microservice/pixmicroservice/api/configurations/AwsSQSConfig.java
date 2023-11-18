@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class AwsSQSConfig {
 
-    @Value("${aws.sqs.accessKey}")
+    @Value("${cloud.aws.credentials.access-key}")
     private String awsAccessKey;
 
-    @Value("${aws.sqs.secretKey}")
+    @Value("${cloud.aws.credentials.secret-key}")
     private String awsSecretKey;
 
     @Bean
