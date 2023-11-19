@@ -33,7 +33,7 @@ public class HttpService {
                 int statusCode = response.statusCode();
                 String responseBody = response.body();
 
-                if (statusCode == 200) {
+                if (statusCode == 201) {
                     log.info("Receiver response: " + responseBody);
                 } else {
                     log.error("Request to receiver failed " + statusCode);

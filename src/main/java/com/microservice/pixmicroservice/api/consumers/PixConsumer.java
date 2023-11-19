@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class PixConsumer {
     public static final Logger LOGGER = Logger.getLogger(PixConsumer.class.getName());
 
-    @Value("${queue-receiver.url}")
+    @Value("${queue.receiver.url}")
     public String receiverUrl;
 
     @Autowired
